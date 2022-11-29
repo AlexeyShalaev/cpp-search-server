@@ -1,3 +1,0 @@
-C:/Users/Alex Shalaev/YandexDisk/IT/YandexPracticum/cpp-search-server/search-server/cmake-build-debug/CMakeFiles/search_server.dir
-C:/Users/Alex Shalaev/YandexDisk/IT/YandexPracticum/cpp-search-server/search-server/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Alex Shalaev/YandexDisk/IT/YandexPracticum/cpp-search-server/search-server/cmake-build-debug/CMakeFiles/rebuild_cache.dir
