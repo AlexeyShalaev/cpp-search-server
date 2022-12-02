@@ -37,6 +37,7 @@ idea
 
 # CMake
 cmake-build-debug
+CMakeLists.txt
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles

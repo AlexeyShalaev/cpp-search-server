@@ -53,7 +53,7 @@ public:
     void AddDocument(int document_id, const string &document) {
         ++document_count_;
         const vector<string> words = SplitIntoWordsNoStop(document);
-        const double inv_word_count = 1.0 / words.size();
+        const double inv_word_count = 1.0 / (double) words.size();
         for (const string &word: words) {
             word_to_document_freqs_[word][document_id] += inv_word_count;
         }
@@ -129,7 +129,7 @@ private:
     }
 
     double ComputeWordInverseDocumentFreq(const string &word) const {
-        return log(document_count_ * 1.0 / word_to_document_freqs_.at(word).size());
+        return log(document_count_ / (double) word_to_document_freqs_.at(word).size());
     }
 
     vector<Document> FindAllDocuments(const Query &query) const {
