@@ -487,7 +487,7 @@ void TestCorrectComputingRelevance() {
     ASSERT(abs(test[1].relevance - 0.173287) < EPSILON);
 }
 
-void TestPredicateFind() {
+void TestFindDocumentsByPredicate() {
     SearchServer search_server;
     search_server.SetStopWords("и в на"s);
     search_server.AddDocument(0, "белый кот и модный ошейник"s, DocumentStatus::ACTUAL, {8, -3});
@@ -503,7 +503,7 @@ void TestPredicateFind() {
     ASSERT(test[0].id == 1);
 }
 
-void TestStatusFind() {
+void TestFindDocumentsByStatus() {
     SearchServer search_server;
     search_server.SetStopWords("и в на"s);
     search_server.AddDocument(0, "белый кот и модный ошейник"s, DocumentStatus::ACTUAL, {8, -3});
@@ -523,8 +523,8 @@ void TestSearchServer() {
     RUN_TEST(TestSorting);
     RUN_TEST(TestCorrectComputingRating);
     RUN_TEST(TestCorrectComputingRelevance);
-    RUN_TEST(TestPredicateFind);
-    RUN_TEST(TestStatusFind);
+    RUN_TEST(TestFindDocumentsByPredicate);
+    RUN_TEST(TestFindDocumentsByStatus);
 }
 
 // --------- Окончание модульных тестов поисковой системы -----------
