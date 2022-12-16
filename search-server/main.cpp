@@ -63,9 +63,16 @@ enum class DocumentStatus {
     REMOVED,
 };
 
-
 class SearchServer {
 public:
+
+    template<template<class E> typename Container>
+    void SetStopWords(const Container<string> &collection) {
+        for (const string &word: collection) {
+            if (!IsValidWord(word)) throw invalid_argument("Stop words should not contain special characters.");
+            stop_words_.insert(word);
+        }
+    }
 
     void SetStopWords(const string &text) {
         for (const string &word: SplitIntoWords(text)) {
@@ -77,14 +84,9 @@ public:
     void AddDocument(int document_id, const string &document, DocumentStatus status,
                      const vector<int> &ratings) {
         if (document_id < 0) throw invalid_argument("Document ID must be a natural number.");
-        for (const auto &doc: documents_) {
-            if (doc.first == document_id) throw invalid_argument("Document with this ID already exists.");
-        }
-
+        if (documents_.count(document_id) > 0)throw invalid_argument("Document with this ID already exists.");
+        ids.push_back(document_id);
         const vector<string> words = SplitIntoWordsNoStop(document);
-        if (!all_of(words.begin(), words.end(), IsValidWord))
-            throw invalid_argument("Document's content should not contains special characters.");
-
         const double inv_word_count = 1 / static_cast<double>(words.size());
         for (const string &word: words) {
             word_to_document_freqs_[word][document_id] += inv_word_count;
@@ -105,13 +107,6 @@ public:
     [[nodiscard]] vector<Document>
     FindTopDocuments(const string &raw_query, KeyMapper key_mapper) const {
         const Query query = ParseQuery(raw_query);
-
-        if (!IsValidQuery(query)) throw invalid_argument("Incorrect Query model.");
-
-        for (const auto &minus_word: query.minus_words) {
-            if (minus_word.empty() || minus_word[0] == '-')
-                throw invalid_argument("Query has incorrect minus-words.");
-        }
 
         auto matched_documents = FindAllDocuments(query, key_mapper);
 
@@ -134,21 +129,14 @@ public:
     }
 
     [[nodiscard]] int GetDocumentId(int index) const {
-        if (index < 0 || index >= documents_.size())
+        if (index < 0 || index >= ids.size())
             throw out_of_range("Index is out of range.");
-        int counter = 0;
-        for (const auto &doc: documents_) {
-            if (counter == index) return doc.first;
-            ++counter;
-        }
-        return INVALID_DOCUMENT_ID;
+        return ids[index];
     }
 
     [[nodiscard]] tuple<vector<string>, DocumentStatus> MatchDocument(const string &raw_query,
                                                                       int document_id) const {
         const Query query = ParseQuery(raw_query);
-
-        if (!IsValidQuery(query)) throw invalid_argument("Incorrect Query model.");
 
         vector<string> matched_words;
         for (const string &word: query.plus_words) {
@@ -174,17 +162,9 @@ public:
 
     SearchServer() = default;
 
-    explicit SearchServer(const string &stop_words) {
+    template<typename StringCollectionOrType>
+    explicit SearchServer(const StringCollectionOrType &stop_words) {
         SetStopWords(stop_words);
-    }
-
-    template<typename StringCollection>
-    explicit SearchServer(const StringCollection &stop_words) {
-        string str = ""s;
-        for (const auto &it: stop_words) {
-            str += it + " "s;
-        }
-        SetStopWords(str);
     }
 
 private:
@@ -196,8 +176,7 @@ private:
     set<string> stop_words_;
     map<string, map<int, double>> word_to_document_freqs_;
     map<int, DocumentData> documents_;
-
-    inline static constexpr int INVALID_DOCUMENT_ID = -1;
+    vector<int> ids;
 
     static bool IsValidWord(const string &word) {
         // A valid word must not contain special characters
@@ -213,6 +192,8 @@ private:
     [[nodiscard]] vector<string> SplitIntoWordsNoStop(const string &text) const {
         vector<string> words;
         for (const string &word: SplitIntoWords(text)) {
+            if (!IsValidWord(word))
+                throw invalid_argument("Document's content should not contains special characters.");
             if (!IsStopWord(word)) {
                 words.push_back(word);
             }
@@ -244,9 +225,12 @@ private:
     [[nodiscard]] Query ParseQuery(const string &text) const {
         Query query;
         for (const string &word: SplitIntoWords(text)) {
+            if (!IsValidWord(word)) throw invalid_argument("Query has incorrect symbols in " + word + ".");
             const QueryWord query_word = ParseQueryWord(word);
             if (!query_word.is_stop) {
                 if (query_word.is_minus) {
+                    if (query_word.data.empty() || query_word.data[0] == '-')
+                        throw invalid_argument("Query has incorrect minus-words:" + query_word.data + ".");
                     query.minus_words.insert(query_word.data);
                 } else {
                     query.plus_words.insert(query_word.data);
@@ -254,18 +238,6 @@ private:
             }
         }
         return query;
-    }
-
-    static bool IsValidQuery(const Query &query) {
-
-        if (any_of(query.minus_words.begin(), query.minus_words.end(), [](const auto &minus_word) {
-            return minus_word.empty() || minus_word[0] == '-' || !IsValidWord(minus_word);
-        }) || any_of(query.plus_words.begin(), query.plus_words.end(), [](const auto &plus_words) {
-            return !IsValidWord(plus_words);
-        }))
-            return false;
-
-        return true;
     }
 
     // Existence required
@@ -607,6 +579,5 @@ int main() {
     TestSearchServer();
     // Если вы видите эту строку, значит все тесты прошли успешно
     cout << "Search server testing finished"s << endl;
-
     return 0;
 }
