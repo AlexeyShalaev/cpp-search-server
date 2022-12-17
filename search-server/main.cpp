@@ -66,6 +66,13 @@ enum class DocumentStatus {
 class SearchServer {
 public:
 
+    SearchServer() = default;
+
+    template<typename StringCollectionOrType>
+    explicit SearchServer(const StringCollectionOrType &stop_words) {
+        SetStopWords(stop_words);
+    }
+
     template<template<class E> typename Container>
     void SetStopWords(const Container<string> &collection) {
         for (const string &word: collection) {
@@ -160,12 +167,6 @@ public:
         return {matched_words, documents_.at(document_id).status};
     }
 
-    SearchServer() = default;
-
-    template<typename StringCollectionOrType>
-    explicit SearchServer(const StringCollectionOrType &stop_words) {
-        SetStopWords(stop_words);
-    }
 
 private:
     struct DocumentData {
@@ -192,8 +193,9 @@ private:
     [[nodiscard]] vector<string> SplitIntoWordsNoStop(const string &text) const {
         vector<string> words;
         for (const string &word: SplitIntoWords(text)) {
-            if (!IsValidWord(word))
+            if (!IsValidWord(word)) {
                 throw invalid_argument("Document's content should not contains special characters.");
+            }
             if (!IsStopWord(word)) {
                 words.push_back(word);
             }
@@ -207,14 +209,20 @@ private:
         bool is_stop;
     };
 
-    [[nodiscard]] QueryWord ParseQueryWord(string text) const {
+    [[nodiscard]] QueryWord ParseQueryWord(string word) const {
         bool is_minus = false;
         // Word shouldn't be empty
-        if (text[0] == '-') {
+        if (word[0] == '-') {
             is_minus = true;
-            text = text.substr(1);
+            word = word.substr(1);
         }
-        return {text, is_minus, IsStopWord(text)};
+        if (word.empty() || !IsValidWord(word)) {
+            throw invalid_argument("Query has incorrect symbols in " + word + ".");
+        }
+        if (is_minus && word[0] == '-') {
+            throw invalid_argument("Query has incorrect minus-words:" + word + ".");
+        }
+        return {word, is_minus, IsStopWord(word)};
     }
 
     struct Query {
@@ -225,12 +233,9 @@ private:
     [[nodiscard]] Query ParseQuery(const string &text) const {
         Query query;
         for (const string &word: SplitIntoWords(text)) {
-            if (!IsValidWord(word)) throw invalid_argument("Query has incorrect symbols in " + word + ".");
             const QueryWord query_word = ParseQueryWord(word);
             if (!query_word.is_stop) {
                 if (query_word.is_minus) {
-                    if (query_word.data.empty() || query_word.data[0] == '-')
-                        throw invalid_argument("Query has incorrect minus-words:" + query_word.data + ".");
                     query.minus_words.insert(query_word.data);
                 } else {
                     query.plus_words.insert(query_word.data);
