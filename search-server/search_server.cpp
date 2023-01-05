@@ -59,6 +59,11 @@ SearchServer::FindTopDocuments(const string &raw_query, DocumentStatus status) c
 
 [[nodiscard]] tuple<vector<string>, DocumentStatus> SearchServer::MatchDocument(const string &raw_query,
                                                                                 int document_id) const {
+    #if TEST
+        cout << "Матчинг документов по запросу: "s << raw_query << std::endl;
+        SEARCH_SERVER_DURATION;
+    #endif
+
     const Query query = ParseQuery(raw_query);
 
     vector<string> matched_words;

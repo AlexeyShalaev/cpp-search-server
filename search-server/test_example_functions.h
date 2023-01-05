@@ -5,7 +5,7 @@
 #ifndef SEARCH_SERVER_TEST_EXAMPLE_FUNCTIONS_H
 #define SEARCH_SERVER_TEST_EXAMPLE_FUNCTIONS_H
 
-
+#include "log_duration.h"
 #include <iostream>
 
 
@@ -43,6 +43,7 @@ AssertImpl(bool value, const std::string &expr_str, const std::string &file, con
 
 template<typename T, typename U>
 void RunTestImpl(T &test, U &func) {
+    CODE_DURATION(func);
     test();
     std::cerr << func << " OK" << std::endl;
 }

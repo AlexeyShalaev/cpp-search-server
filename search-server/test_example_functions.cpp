@@ -266,6 +266,7 @@ void TestPaginator() {
 
 // Функция TestSearchServer является точкой входа для запуска тестов
 void TestSearchServer() {
+    CODE_DURATION("TOTAL TEST");
     RUN_TEST(TestExcludeStopWordsFromAddedDocumentContent);
     RUN_TEST(TestExcludeDocumentsContainingMinusWords);
     RUN_TEST(TestMatching);
