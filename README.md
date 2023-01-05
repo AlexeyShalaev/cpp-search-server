@@ -10,6 +10,7 @@
 - [string_processing](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/string_processing.h) (Работа со строками)
 - [read_input_functions](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/read_input_functions.h) (Ввод данных)
 - [output_functions](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/output_functions.h) (Вывод данных)
+- [log_duration](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/log_duration.h) (Подсчет времени выполнения кода)
 - [test_example_functions](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/test_example_functions.h) (Тестирование системы)
 
 ### Примечание
