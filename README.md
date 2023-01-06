@@ -11,7 +11,8 @@
 - [read_input_functions](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/read_input_functions.h) (Ввод данных)
 - [output_functions](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/output_functions.h) (Вывод данных)
 - [log_duration](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/log_duration.h) (Подсчет времени выполнения кода)
-- [test_example_functions](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/test_example_functions.h) (Тестирование системы)
+- [log_duration](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/log_duration.h) (Подсчет времени выполнения кода)
+- [stream_uniter](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/stream_uniter.h) (Управление потоками ввода/вывода)
 
 ### Примечание
 Поиск осуществляется только по полному сопадению слова, поэтому данное решение лучше использовать, если у вас много документов и запросы довольно точные.
