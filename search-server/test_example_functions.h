@@ -1,5 +1,5 @@
 //
-// Created by Alex Shalaev on 04.01.2023.
+// -------- Тестирование ----------
 //
 
 #ifndef SEARCH_SERVER_TEST_EXAMPLE_FUNCTIONS_H
@@ -72,6 +72,8 @@ void TestFindDocumentsByStatus();
 void TestEmptyRequests();
 
 void TestPaginator();
+
+void TestRemovingDuplicates();
 
 // Функция TestSearchServer является точкой входа для запуска тестов
 void TestSearchServer();

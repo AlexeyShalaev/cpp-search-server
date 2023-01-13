@@ -1,5 +1,5 @@
 //
-// Created by Alex Shalaev on 04.01.2023.
+// -------- Поисковой сервер ----------
 //
 
 #ifndef SEARCH_SERVER_SEARCH_SERVER_H
@@ -36,6 +36,12 @@ public:
     void
     AddDocument(int document_id, const std::string &document, DocumentStatus status, const std::vector<int> &ratings);
 
+    void RemoveDocument(int document_id);
+
+    auto GetDocuments() {
+        return documents_;
+    }
+
     [[nodiscard]] std::vector<Document>
     FindTopDocuments(const std::string &raw_query, DocumentStatus status = DocumentStatus::ACTUAL) const;
 
@@ -45,14 +51,21 @@ public:
 
     [[nodiscard]] int GetDocumentCount() const;
 
-    [[nodiscard]] int GetDocumentId(int index) const;
+    //[[nodiscard]] int GetDocumentId(int index) const;
+
+    std::set<int>::iterator begin();
+
+    std::set<int>::iterator end();
 
     [[nodiscard]] std::tuple<std::vector<std::string>, DocumentStatus>
     MatchDocument(const std::string &raw_query, int document_id) const;
 
+    [[nodiscard]] const std::map<std::string, double> &GetWordFrequencies(int document_id) const;
 
 private:
     struct DocumentData {
+        std::set<std::string> content;
+        std::map<std::string, double> freqs;
         int rating;
         DocumentStatus status;
     };
@@ -60,7 +73,7 @@ private:
     std::set<std::string> stop_words_;
     std::map<std::string, std::map<int, double>> word_to_document_freqs_;
     std::map<int, DocumentData> documents_;
-    std::vector<int> ids;
+    std::set<int> ids;
 
     static bool IsValidWord(const std::string &word);
 
@@ -84,7 +97,7 @@ private:
     [[nodiscard]] Query ParseQuery(const std::string &text) const;
 
     // Existence required
-    double ComputeWordInverseDocumentFreq(const std::string &word) const {
+    [[nodiscard]] double ComputeWordInverseDocumentFreq(const std::string &word) const {
         return log(GetDocumentCount() / static_cast<double>(word_to_document_freqs_.at(word).size()));
     }
 
@@ -109,10 +122,10 @@ void SearchServer::SetStopWords(const Container<std::string> &collection) {
 template<typename KeyMapper>
 [[nodiscard]] std::vector<Document>
 SearchServer::FindTopDocuments(const std::string &raw_query, KeyMapper key_mapper) const {
-    #if TEST
-        std::cout << "Результаты поиска по запросу: " << raw_query << std::endl;
-        SEARCH_SERVER_DURATION;
-    #endif
+#if TEST
+    std::cout << "Результаты поиска по запросу: " << raw_query << std::endl;
+    SEARCH_SERVER_DURATION;
+#endif
 
 
     const Query query = ParseQuery(raw_query);
@@ -166,5 +179,7 @@ std::vector<Document> SearchServer::FindAllDocuments(const Query &query, KeyMapp
     return matched_documents;
 }
 
+void AddDocument(SearchServer &search_server, int document_id, const std::string &document, DocumentStatus status,
+                 const std::vector<int> &ratings);
 
 #endif //SEARCH_SERVER_SEARCH_SERVER_H

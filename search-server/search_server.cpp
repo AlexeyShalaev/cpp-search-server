@@ -1,5 +1,5 @@
 //
-// Created by Alex Shalaev on 04.01.2023.
+// -------- Поисковой сервер ----------
 //
 
 #include "search_server.h"
@@ -28,14 +28,17 @@ void SearchServer::SetStopWords(const string &text) {
 void SearchServer::AddDocument(int document_id, const string &document, DocumentStatus status,
                                const vector<int> &ratings) {
     if (document_id < 0) throw invalid_argument("Document ID must be a natural number.");
-    if (documents_.count(document_id) > 0)throw invalid_argument("Document with this ID already exists.");
-    ids.push_back(document_id);
+    if (documents_.count(document_id) > 0) throw invalid_argument("Document with this ID already exists.");
+    ids.insert(document_id);
     const vector<string> words = SplitIntoWordsNoStop(document);
     const double inv_word_count = 1 / static_cast<double>(words.size());
+    map<string, double> freqs;
     for (const string &word: words) {
         word_to_document_freqs_[word][document_id] += inv_word_count;
+        freqs[word] += inv_word_count;
     }
-    documents_.emplace(document_id, DocumentData{ComputeAverageRating(ratings), status});
+    set<string> s{words.begin(), words.end()};
+    documents_.emplace(document_id, DocumentData{s, freqs, ComputeAverageRating(ratings), status});
 }
 
 
@@ -51,18 +54,20 @@ SearchServer::FindTopDocuments(const string &raw_query, DocumentStatus status) c
     return static_cast<int>(documents_.size());
 }
 
+/*
 [[nodiscard]] int SearchServer::GetDocumentId(int index) const {
     if (index < 0 || index >= ids.size())
         throw out_of_range("Index is out of range.");
     return ids[index];
 }
+*/
 
 [[nodiscard]] tuple<vector<string>, DocumentStatus> SearchServer::MatchDocument(const string &raw_query,
                                                                                 int document_id) const {
-    #if TEST
-        cout << "Матчинг документов по запросу: "s << raw_query << std::endl;
-        SEARCH_SERVER_DURATION;
-    #endif
+#if TEST
+    cout << "Матчинг документов по запросу: "s << raw_query << std::endl;
+    SEARCH_SERVER_DURATION;
+#endif
 
     const Query query = ParseQuery(raw_query);
 
@@ -144,5 +149,31 @@ bool SearchServer::IsValidWord(const string &word) {
     }
     return query;
 }
+
+set<int>::iterator SearchServer::begin() {
+    return std::begin(ids);
+}
+
+set<int>::iterator SearchServer::end() {
+    return std::end(ids);
+}
+
+const map<string, double> &SearchServer::GetWordFrequencies(int document_id) const {
+    return documents_.at(document_id).freqs;
+}
+
+void SearchServer::RemoveDocument(int document_id) {
+    ids.erase(document_id);
+    documents_.erase(document_id);
+    for (auto &[key, val]: word_to_document_freqs_) {
+        val.erase(document_id);
+    }
+}
+
+void AddDocument(SearchServer &search_server, int document_id, const std::string &document, DocumentStatus status,
+                 const std::vector<int> &ratings) {
+    search_server.AddDocument(document_id, document, status, ratings);
+}
+
 
 

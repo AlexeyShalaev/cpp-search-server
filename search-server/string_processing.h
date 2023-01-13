@@ -1,5 +1,5 @@
 //
-// Created by Alex Shalaev on 04.01.2023.
+// -------- Обработка строк ----------
 //
 
 #ifndef SEARCH_SERVER_STRING_PROCESSING_H
