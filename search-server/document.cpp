@@ -1,5 +1,5 @@
 //
-// Created by Alex Shalaev on 04.01.2023.
+// -------- Документы ----------
 //
 
 #include "document.h"
