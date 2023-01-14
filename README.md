@@ -4,6 +4,7 @@
 
 - [search_server](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/search_server.h) (Поисковая машина)
 - [document](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/document.h) (Модель документа)
+- [remove_duplicates](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/remove_duplicates.h) (Дедупликатор документов)
 - [request_queue](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/request_queue.h) (Анализ запросов)
 - [paginator](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/paginator.h) (Разбиение результатов на страницы)
 - [iterator](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/iterator.h) (Работа с итераторами)
