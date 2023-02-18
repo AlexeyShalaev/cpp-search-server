@@ -7,27 +7,17 @@
 using namespace std;
 
 void RemoveDuplicates(SearchServer &search_server, bool print_info = true) {
-    /*
     auto docs = search_server.GetDocuments();
-    for (auto it = begin(docs); it != end(docs); it = next(it)) {
-        for (auto sub_it = next(it); sub_it != end(docs); sub_it = next(sub_it)) {
-            if (sub_it->first > it->first && sub_it->second.content == it->second.content) {
-                auto prev_iterator = next(sub_it, -1);
-                if (print_info) {
-                    cout << "Found duplicate document id " << sub_it->first << endl;
-                }
-                search_server.RemoveDocument(sub_it->first);
-                docs.erase(sub_it->first);
-                sub_it = prev_iterator;
-            }
-        }
-    }
-     */
-    auto docs = search_server.GetDocuments();
-    set<set<string>> uniq_contents;
+    set<set<string_view>> uniq_contents;
     for (const auto &[id, doc]: search_server.GetDocuments()) {
-        if (uniq_contents.count(doc.content) == 0) {
-            uniq_contents.insert(doc.content);
+        set<string_view> uniq_words;
+        transform(doc.freqs.begin(), doc.freqs.end(),
+                  inserter(uniq_words, uniq_words.begin()),
+                  [](const auto p) {
+                      return p.first;
+                  });
+        if (uniq_contents.count(uniq_words) == 0) {
+            uniq_contents.insert(uniq_words);
         } else {
             if (print_info) {
                 cout << "Found duplicate document id " << id << endl;
