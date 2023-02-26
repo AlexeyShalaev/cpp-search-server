@@ -8,6 +8,7 @@
 - [request_queue](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/request_queue.h) (Анализ запросов)
 - [paginator](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/paginator.h) (Разбиение результатов на страницы)
 - [iterator](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/iterator.h) (Работа с итераторами)
+- [iterator](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/concurrent_map.h) (Словарь поддерживающий многопоточность)
 - [string_processing](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/string_processing.h) (Работа со строками)
 - [read_input_functions](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/read_input_functions.h) (Ввод данных)
 - [output_functions](https://github.com/AlexeyShalaev/cpp-search-server/blob/main/search-server/output_functions.h) (Вывод данных)
