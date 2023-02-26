@@ -10,7 +10,7 @@
 
 struct Document {
 
-    Document(int _id = 0, double _relevance = 0.0, int _rating = 0);
+    explicit Document(int _id = 0, double _relevance = 0.0, int _rating = 0);
 
     int id;
     double relevance;
@@ -27,6 +27,5 @@ enum class DocumentStatus {
     BANNED,
     REMOVED,
 };
-
 
 #endif //SEARCH_SERVER_DOCUMENT_H

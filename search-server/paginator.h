@@ -23,17 +23,11 @@ public:
         }
     }
 
-    auto begin() const {
-        return pages_.begin();
-    }
+    auto begin() const { return pages_.begin(); }
 
-    auto end() const {
-        return pages_.end();
-    }
+    auto end() const { return pages_.end(); }
 
-    [[nodiscard]] size_t size() const {
-        return pages_.size();
-    }
+    [[nodiscard]] size_t size() const { return pages_.size(); }
 
 private:
     std::vector<IteratorRange<Iterator>> pages_;

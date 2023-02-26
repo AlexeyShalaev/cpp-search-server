@@ -10,21 +10,13 @@
 template<typename Iterator>
 class IteratorRange {
 public:
-    IteratorRange(Iterator begin, Iterator end)
-            : first_(begin), last_(end), size_(distance(first_, last_)) {
-    }
+    IteratorRange(Iterator begin, Iterator end) : first_(begin), last_(end), size_(distance(first_, last_)) {}
 
-    Iterator begin() const {
-        return first_;
-    }
+    Iterator begin() const { return first_; }
 
-    Iterator end() const {
-        return last_;
-    }
+    Iterator end() const { return last_; }
 
-    [[nodiscard]] size_t size() const {
-        return size_;
-    }
+    [[nodiscard]] size_t size() const { return size_; }
 
 private:
     Iterator first_, last_;

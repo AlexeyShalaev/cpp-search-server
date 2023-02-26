@@ -6,8 +6,7 @@
 
 using namespace std;
 
-Document::Document(int _id, double _relevance, int _rating) : id(_id), relevance(_relevance),
-                                                              rating(_rating) {}
+Document::Document(int _id, double _relevance, int _rating) : id(_id), relevance(_relevance), rating(_rating) {}
 
 ostream &operator<<(ostream &out, const Document &document) {
     out << "{ "s

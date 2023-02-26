@@ -6,11 +6,11 @@
 
 using namespace std;
 
-RequestQueue::RequestQueue(const SearchServer &search_server)
-        : search_server_(search_server), no_results_requests_(0), current_time_(0) {
-}
+RequestQueue::RequestQueue(const SearchServer &search_server) : search_server_(search_server),
+                                                                no_results_requests_(0),
+                                                                current_time_(0) {}
 
-[[maybe_unused]] vector<Document> RequestQueue::AddFindRequest(const string &raw_query, DocumentStatus status) {
+vector<Document> RequestQueue::AddFindRequest(const string &raw_query, DocumentStatus status) {
     auto result = search_server_.FindTopDocuments(raw_query, status);
     AddRequest(result.size());
     return result;

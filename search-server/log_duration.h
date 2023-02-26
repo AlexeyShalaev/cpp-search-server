@@ -33,7 +33,7 @@ protected:
 class CodeDuration : LogDuration {
 public:
 
-    explicit CodeDuration(std::string id, std::ostream &stream = std::cerr) : LogDuration(stream), id_(std::move(id)) {
+    explicit CodeDuration(std::string_view id, std::ostream &stream = std::cerr) : LogDuration(stream), id_(std::move(id)) {
     }
 
     ~CodeDuration() {

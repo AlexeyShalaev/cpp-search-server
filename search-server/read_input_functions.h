@@ -11,5 +11,4 @@ std::string ReadLine();
 
 int ReadLineWithNumber();
 
-
 #endif //SEARCH_SERVER_READ_INPUT_FUNCTIONS_H
